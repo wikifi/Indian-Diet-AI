@@ -1,0 +1,9 @@
+# Environments
+.env
+.venv/
+
+# Python compiled files
+__pycache__/
+
+# Project specific
+qdrant_storage/
