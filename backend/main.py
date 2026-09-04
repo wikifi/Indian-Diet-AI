@@ -4,11 +4,6 @@ from backend.routes.calorie import router as calorie_router
 from backend.routes.chat import router as chat_router
 from backend.routes.food import router as food_router
 
-
-@app.get("/")
-def read_root():
-    return {"Python": "on Vercel"}
-
 app = FastAPI(
     title="Indian Diet AI",
     description="LLM and RAG based Indian Food Calorie Calculator",
