@@ -1,1 +1,737 @@
 
+# 🥗 Indian Diet AI
+
+**Indian Diet AI** is an AI-powered nutrition and diet recommendation system designed around Indian food and eating habits. It combines **LLM, RAG, vector search, and deterministic calorie calculations** to provide nutrition information, calorie estimation, and personalized Indian diet recommendations.
+
+The application uses **Streamlit** for the frontend and **FastAPI** for the backend.
+
+---
+
+## 🚀 Features
+
+* 🔥 BMR calculation
+* ⚡ TDEE calculation
+* ⚖️ BMI calculation
+* 🎯 Daily calorie target
+* 🍛 Indian food calorie search
+* 🔎 Semantic food search using embeddings
+* 🧠 RAG-based nutrition question answering
+* 🤖 Gemini-powered AI nutrition assistant
+* 🥗 Personalized Indian diet recommendations
+* 📊 Nutrition information retrieval
+* 🔗 REST APIs using FastAPI
+* 🖥️ Interactive Streamlit dashboard
+* 🔐 Environment-variable based API key management
+
+---
+
+## 🏗️ System Architecture
+
+```text
+                         USER
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │   Streamlit  │
+                    │   Frontend   │
+                    └──────┬───────┘
+                           │
+                           ▼
+                    ┌──────────────┐
+                    │   FastAPI    │
+                    │   Backend    │
+                    └──────┬───────┘
+                           │
+             ┌─────────────┼─────────────┐
+             │             │             │
+             ▼             ▼             ▼
+      Calorie Engine   Food Search    AI Assistant
+             │             │             │
+             │             ▼             ▼
+             │          Qdrant       RAG Retriever
+             │             │             │
+             │             └──────┬──────┘
+             │                    ▼
+             │              Nutrition Data
+             │                    │
+             │                    ▼
+             │                Gemini LLM
+             │                    │
+             └────────────────────┘
+                           │
+                           ▼
+                    Personalized Result
+```
+
+---
+
+# 🧠 RAG Architecture
+
+The nutrition knowledge base is stored as food records.
+
+Each food contains information such as:
+
+```text
+Food
+Category
+Serving
+Calories
+Protein
+Carbohydrates
+Fat
+Fiber
+```
+
+The RAG pipeline works as follows:
+
+```text
+Indian Food Dataset
+        ↓
+Text Conversion
+        ↓
+Sentence Transformer
+        ↓
+Embeddings
+        ↓
+Qdrant Vector Database
+        ↓
+Semantic Search
+        ↓
+Relevant Nutrition Data
+        ↓
+Gemini
+        ↓
+Final Response
+```
+
+This allows the LLM to use retrieved nutrition information rather than relying only on its internal knowledge.
+
+---
+
+# 🛠️ Technology Stack
+
+| Component            | Technology                     |
+| -------------------- | ------------------------------ |
+| Frontend             | Streamlit                      |
+| Backend              | FastAPI                        |
+| Programming Language | Python                         |
+| LLM                  | Google Gemini                  |
+| LLM Framework        | LangChain                      |
+| RAG                  | Retrieval Augmented Generation |
+| Vector Database      | Qdrant                         |
+| Embeddings           | Sentence Transformers          |
+| Data Processing      | Pandas                         |
+| API Client           | Requests                       |
+| Configuration        | python-dotenv                  |
+| API Server           | Uvicorn                        |
+
+---
+
+# 📁 Project Structure
+
+```text
+indian_diet_ai/
+│
+├── backend/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── schemas.py
+│   │
+│   ├── routes/
+│   │   ├── __init__.py
+│   │   ├── calorie.py
+│   │   ├── chat.py
+│   │   └── food.py
+│   │
+│   ├── services/
+│   │   ├── __init__.py
+│   │   ├── calorie_service.py
+│   │   └── llm_service.py
+│   │
+│   └── rag/
+│       ├── __init__.py
+│       ├── ingestion.py
+│       └── retriever.py
+│
+├── frontend/
+│   └── app.py
+│
+├── data/
+│   └── indian_foods.csv
+│
+├── venv/
+│
+├── .env
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
+
+---
+
+# 📊 Dataset
+
+The project currently uses an Indian food nutrition dataset.
+
+Example:
+
+```csv
+food,category,serving,calories,protein,carbs,fat,fiber
+Roti,Bread,1 piece,100,3,15,3,2
+Rice,Grains,1 bowl,200,4,45,0.5,1
+Dal,Pulses,1 bowl,180,10,25,5,7
+Rajma,Pulses,1 bowl,220,12,35,4,9
+Chole,Pulses,1 bowl,270,12,40,7,10
+Paneer,Dairy,100 g,265,18,6,20,0
+Curd,Dairy,100 g,60,3.5,4.7,3.3,0
+Poha,Breakfast,1 bowl,250,5,40,8,3
+Upma,Breakfast,1 bowl,220,6,35,7,3
+Idli,Breakfast,2 pieces,140,4,28,1,2
+Dosa,Breakfast,1 piece,170,4,30,4,2
+Paratha,Bread,1 piece,220,5,30,9,4
+Samosa,Snack,1 piece,150,3,15,8,2
+Biryani,Main Course,1 bowl,350,15,45,12,3
+```
+
+The dataset can later be expanded with:
+
+* Breakfast foods
+* Lunch foods
+* Dinner foods
+* Snacks
+* Fruits
+* Vegetables
+* Salads
+* Raita
+* High-protein foods
+* Egg-based foods
+* Non-vegetarian foods
+* Regional Indian dishes
+
+---
+
+# 🔥 Calorie Calculation
+
+The application uses deterministic Python calculations for calorie estimation.
+
+## BMR
+
+The project uses the Mifflin-St Jeor equation.
+
+### Male
+
+```text
+BMR = 10 × weight + 6.25 × height - 5 × age + 5
+```
+
+### Female
+
+```text
+BMR = 10 × weight + 6.25 × height - 5 × age - 161
+```
+
+---
+
+## ⚡ TDEE
+
+TDEE is estimated using an activity multiplier.
+
+```text
+Sedentary          = 1.20
+Lightly Active     = 1.375
+Moderately Active  = 1.55
+Very Active        = 1.725
+Extremely Active   = 1.90
+```
+
+```text
+TDEE = BMR × Activity Factor
+```
+
+---
+
+## 🎯 Calorie Target
+
+The current implementation uses:
+
+```text
+Weight Loss → TDEE - 400 kcal
+Maintenance → TDEE
+Weight Gain → TDEE + 400 kcal
+```
+
+These values are intended for application demonstration and should be refined with additional safety and personalization rules before production use.
+
+---
+
+# 🔎 Food Search
+
+Food searches are handled using semantic vector search.
+
+For example:
+
+```text
+User:
+"What is the calorie content of paneer?"
+```
+
+The system:
+
+```text
+Query
+ ↓
+Embedding
+ ↓
+Qdrant
+ ↓
+Similar food records
+ ↓
+Nutrition information
+```
+
+The system can also understand queries that are not exact matches to the food name.
+
+---
+
+# 🤖 AI Nutrition Assistant
+
+The AI assistant uses:
+
+```text
+User Question
+      ↓
+Embedding
+      ↓
+Qdrant Search
+      ↓
+Relevant Nutrition Context
+      ↓
+Gemini
+      ↓
+Answer
+```
+
+Example:
+
+```text
+User:
+How much protein is present in paneer?
+
+Assistant:
+Retrieves Paneer nutrition data from Qdrant
+and generates a response using the retrieved context.
+```
+
+The RAG prompt instructs the model to avoid inventing nutrition values that are not available in the knowledge base.
+
+---
+
+# 🥗 Diet Recommendation
+
+The diet recommendation workflow combines:
+
+```text
+User Profile
+      ↓
+BMR
+      ↓
+TDEE
+      ↓
+Calorie Target
+      ↓
+Food Knowledge Base
+      ↓
+RAG Retrieval
+      ↓
+Gemini
+      ↓
+Indian Diet Recommendation
+```
+
+User information includes:
+
+* Age
+* Gender
+* Height
+* Weight
+* Activity level
+* Fitness goal
+* Food preference
+* Number of meals
+
+Supported food preferences include:
+
+```text
+Vegetarian
+Eggetarian
+Non-Vegetarian
+```
+
+---
+
+# ⚙️ Installation
+
+## 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/indian-diet-ai.git
+```
+
+Go into the project:
+
+```bash
+cd indian-diet-ai
+```
+
+---
+
+## 2. Create virtual environment
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+---
+
+## 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+# 🔐 Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+GEMINI_API_KEY=your_gemini_api_key
+
+QDRANT_URL=http://localhost:6333
+QDRANT_API_KEY=
+
+API_BASE_URL=http://127.0.0.1:8000
+```
+
+Never upload `.env` to GitHub.
+
+---
+
+# 🗄️ Qdrant Setup
+
+The project uses Qdrant for vector storage.
+
+After preparing the dataset, run the ingestion script:
+
+```bash
+python backend/rag/ingestion.py
+```
+
+This process:
+
+```text
+CSV
+ ↓
+Food Records
+ ↓
+Text Documents
+ ↓
+Embeddings
+ ↓
+Qdrant Collection
+```
+
+The collection used by the project is:
+
+```text
+indian_foods
+```
+
+---
+
+# ▶️ Running the Backend
+
+Activate the virtual environment:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+Start FastAPI:
+
+```bash
+uvicorn backend.main:app --reload
+```
+
+Backend:
+
+```text
+http://127.0.0.1:8000
+```
+
+Swagger documentation:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+---
+
+# 🖥️ Running Streamlit
+
+Open another terminal.
+
+Activate the environment:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+Run:
+
+```bash
+streamlit run frontend/app.py
+```
+
+The Streamlit application will open in your browser.
+
+---
+
+# 🔌 API Endpoints
+
+## Health Check
+
+```http
+GET /
+```
+
+Example response:
+
+```json
+{
+  "message": "Indian Diet AI API is running",
+  "status": "success"
+}
+```
+
+---
+
+## Health
+
+```http
+GET /health
+```
+
+Response:
+
+```json
+{
+  "status": "healthy"
+}
+```
+
+---
+
+## Calorie Calculator
+
+```http
+POST /api/calorie/calculate
+```
+
+Request:
+
+```json
+{
+  "age": 24,
+  "gender": "female",
+  "height_cm": 160,
+  "weight_kg": 65,
+  "activity_level": "moderately_active",
+  "goal": "weight_loss"
+}
+```
+
+Response:
+
+```json
+{
+  "bmr": 1344,
+  "tdee": 2083.2,
+  "bmi": 25.39,
+  "daily_calorie_target": 1683.2,
+  "goal": "weight_loss"
+}
+```
+
+---
+
+## Food Search
+
+```http
+GET /api/food/search?query=paneer
+```
+
+Example response:
+
+```json
+{
+  "query": "paneer",
+  "results": [
+    {
+      "food": "Paneer",
+      "category": "Dairy",
+      "serving": "100 g",
+      "nutrition": "...",
+      "score": 0.92
+    }
+  ]
+}
+```
+
+---
+
+## AI Chat
+
+```http
+POST /api/chat
+```
+
+Request:
+
+```json
+{
+  "query": "How many calories are in paneer?"
+}
+```
+
+Response:
+
+```json
+{
+  "query": "How many calories are in paneer?",
+  "answer": "..."
+}
+```
+
+---
+
+# 🧪 Testing
+
+### Test FastAPI
+
+Open:
+
+```text
+http://127.0.0.1:8000/docs
+```
+
+Use Swagger UI to test the APIs.
+
+### Test Streamlit
+
+Run:
+
+```bash
+streamlit run frontend/app.py
+```
+
+Then test:
+
+1. Calorie Calculator
+2. Food Calorie Search
+3. AI Nutrition Assistant
+4. Diet Recommendation
+
+---
+
+# 🔐 GitHub Security
+
+The following files/directories should not be committed:
+
+```text
+.env
+venv/
+qdrant_data/
+__pycache__/
+*.pyc
+```
+
+Recommended `.gitignore`:
+
+```gitignore
+venv/
+.env
+__pycache__/
+*.pyc
+qdrant_data/
+.vscode/
+```
+
+---
+
+# 📈 Future Improvements
+
+The project can be extended with:
+
+* 📊 Daily calorie tracking
+* 🍽️ Meal-wise calorie calculation
+* 🥩 Protein target calculation
+* 🥗 Macro-based diet planning
+* 🧾 Food quantity calculator
+* 📅 Weekly diet plans
+* 🛒 Grocery list generation
+* 👤 User authentication
+* 💾 User profiles
+* 📱 Mobile-friendly UI
+* 📈 Progress tracking
+* 🧠 Improved RAG retrieval
+* 🔄 Hybrid keyword + vector search
+* 🗃️ Larger Indian food database
+* 🌐 Deployment using Docker
+* ☁️ Cloud-hosted Qdrant
+* 🔐 Production authentication and rate limiting
+
+---
+
+# ⚠️ Disclaimer
+
+This application is intended for **educational and informational purposes only**.
+
+Calorie estimates and diet recommendations generated by the application should not be treated as medical advice or as a substitute for consultation with a qualified doctor, dietitian, or nutrition professional.
+
+---
+
+# 👩‍💻 Author
+
+**Yuvika Singh**
+
+Indian Diet AI — LLM + RAG based Indian Food Nutrition and Diet Recommendation System.
+
+---
+
+# ⭐ Project Status
+
+```text
+Backend             ✅
+FastAPI             ✅
+Calorie Calculator  ✅
+Qdrant RAG          ✅
+Food Search API     ✅
+Gemini Integration  ✅
+Streamlit UI        ✅
+Diet Recommendation 🚧
+Advanced Analytics  🚧
+```
+
+---
+
+## 📜 License
+
+This project can be released under the MIT License or another license of your choice.
