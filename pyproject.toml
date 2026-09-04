@@ -1,2 +1,7 @@
-[tool.fastapi]
+[project]
+name = "indian-diet-ai"
+version = "0.1.0"
+description = "Indian Diet AI - Calorie Calculator"
+
+[tool.uvicorn]
 app = "backend.main:app"
