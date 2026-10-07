@@ -140,8 +140,6 @@ streamlit run frontend/app.py
 | `/api/food/search`       | GET    | Search food nutrition          |
 | `/api/chat`              | POST   | Nutrition Q&A                  |
 
-##  Screen shots 
-
 
 
 
