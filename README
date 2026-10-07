@@ -140,10 +140,8 @@ streamlit run frontend/app.py
 | `/api/food/search`       | GET    | Search food nutrition          |
 | `/api/chat`              | POST   | Nutrition Q&A                  |
 
-## Disclaimer
+##  Screen shots 
 
-This project is intended for educational and informational purposes only. It is not a substitute for professional medical or dietary advice.
 
----
 
-**Author:** Yuvika Singh
+
