@@ -16,18 +16,14 @@ from qdrant_client import QdrantClient
 
 load_dotenv()
 
-# -----------------------------
 # Configuration
-# -----------------------------
 
 COLLECTION_NAME = "indian_foods"
 
 QDRANT_URL = os.getenv("QDRANT_URL")
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
 
-# -----------------------------
 # Qdrant Client
-# -----------------------------
 
 client = QdrantClient(
     url=QDRANT_URL,
@@ -50,13 +46,10 @@ def search_food(query: str, top_k: int = 5):
         query_text=query,
         limit=top_k
     )
-
+    
     return results
 
-
-# -----------------------------
 # Test Retriever
-# -----------------------------
 
 if __name__ == "__main__":
 
