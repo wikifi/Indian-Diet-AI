@@ -20,9 +20,7 @@ from qdrant_client.models import Distance, VectorParams, PointStruct
 
 load_dotenv()
 
-# -----------------------------
 # Configuration
-# -----------------------------
 
 CSV_PATH = r"E:\Calorie calculator\data\Indian_Food_Nutrition_Processed.csv"
 COLLECTION_NAME = "indian_foods"
@@ -30,17 +28,13 @@ COLLECTION_NAME = "indian_foods"
 QDRANT_URL = os.getenv("QDRANT_URL")
 QDRANT_API_KEY = os.getenv("QDRANT_API_KEY")
 
-# -----------------------------
 # Load Dataset
-# -----------------------------
 
 df = pd.read_csv(CSV_PATH)
 
 print(f"Loaded {len(df)} food records.")
 
-# -----------------------------
 # Convert rows to Documents
-# -----------------------------
 
 documents = []
 
@@ -66,9 +60,8 @@ Fibre: {row['Fibre (g)']} g
 
 print(f"Created {len(documents)} documents.")
 
-# -----------------------------
 # Connect to Qdrant
-# -----------------------------
+
 
 client = QdrantClient(
     url=QDRANT_URL,
