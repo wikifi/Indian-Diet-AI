@@ -7,9 +7,7 @@ from backend.rag.retriever import search_food
 
 load_dotenv()
 
-# -----------------------------
 # Gemini Configuration
-# -----------------------------
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
@@ -22,12 +20,7 @@ llm = ChatGoogleGenerativeAI(
     temperature=0.2
 )
 
-
-
-
-# -----------------------------
 # RAG + LLM Function
-# -----------------------------
 
 def ask_nutrition_assistant(query: str, context_query: str = None, top_k: int = 5):
 
@@ -56,9 +49,8 @@ def ask_nutrition_assistant(query: str, context_query: str = None, top_k: int = 
 
     context = "\n\n".join(context_parts)
 
-    # -----------------------------
     # Prompt
-    # -----------------------------
+    
 
     prompt = f"""
 You are an Indian food nutrition assistant.
@@ -88,9 +80,7 @@ User Question:
 Answer:
 """
 
-    # -----------------------------
     # Generate Response
-    # -----------------------------
 
     response = llm.invoke(prompt)
 
